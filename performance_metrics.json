@@ -1,0 +1,35 @@
+{
+  "TF-IDF": {
+    "method": "TF-IDF",
+    "mean_similarity": 0.07228748555001233,
+    "median_similarity": 0.06912866645177951,
+    "std_similarity": 0.03441477640316722,
+    "max_similarity": 0.4306889006680418,
+    "min_similarity": 0.0,
+    "high_similarity_pairs": "146",
+    "very_high_similarity_pairs": "0",
+    "total_comparisons": 2118852
+  },
+  "Word2Vec": {
+    "method": "Word2Vec",
+    "mean_similarity": 0.8586709829969432,
+    "median_similarity": 0.8695076678305994,
+    "std_similarity": 0.06533784601268494,
+    "max_similarity": 0.9845638758973735,
+    "min_similarity": 0.0,
+    "high_similarity_pairs": "2117756",
+    "very_high_similarity_pairs": "2110492",
+    "total_comparisons": 2118852
+  },
+  "all-MiniLM-L6-v2": {
+    "method": "all-MiniLM-L6-v2",
+    "mean_similarity": "0.51490533",
+    "median_similarity": "0.5276672",
+    "std_similarity": "0.13192795",
+    "max_similarity": "0.89097035",
+    "min_similarity": "-0.116116256",
+    "high_similarity_pairs": "1985932",
+    "very_high_similarity_pairs": "1239967",
+    "total_comparisons": 2118852
+  }
+}
