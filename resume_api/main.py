@@ -4,13 +4,11 @@ from fastapi import FastAPI, HTTPException
 import numpy as np
 import pandas as pd
 
-# --- Ensure custom classes available for unpickling ---
 from talent_feature_engineer import TalentScoringFeatureEngineer
 from model_response_parser import ModelResponseParser
 __main__.TalentScoringFeatureEngineer = TalentScoringFeatureEngineer
 __main__.ModelResponseParser = ModelResponseParser
 
-# --- Load persisted artifacts at startup ---
 # 1. Dataframes
 
 resume_df = pd.read_csv("Challenge-Data/processed_resumes.csv")
@@ -20,22 +18,22 @@ jd_df = pd.read_csv("Challenge-Data/processed_jds.csv")
 jd_df["cleaned_job_description"] = jd_df["cleaned_job_description"].fillna("").astype(str)
 
 # 2. Similarity matrices
-sim_tfidf       = np.load("Challenge-Data/similarity_matrix_tfidf.npy")
-sim_word2vec    = np.load("Challenge-Data/similarity_matrix_word2vec.npy")
+sim_tfidf = np.load("Challenge-Data/similarity_matrix_tfidf.npy")
+sim_word2vec = np.load("Challenge-Data/similarity_matrix_word2vec.npy")
 sim_transformer = np.load("Challenge-Data/similarity_matrix_transformer.npy")
-sim_matrices    = {
+sim_matrices = {
     "TF-IDF": sim_tfidf,
     "Word2Vec": sim_word2vec,
     "all-MiniLM-L6-v2": sim_transformer
 }
 
 # 3. Models & utilities (load with joblib)
-model             = joblib.load("Challenge-Data/talent_model_linear_regression.pkl")
-scaler            = joblib.load("Challenge-Data/talent_scaler.pkl")
-feature_engineer  = joblib.load("Challenge-Data/talent_feature_engineer.pkl")
-parser            = joblib.load("Challenge-Data/model_response_parser.pkl")
+model = joblib.load("Challenge-Data/talent_model_linear_regression.pkl")
+scaler = joblib.load("Challenge-Data/talent_scaler.pkl")
+feature_engineer = joblib.load("Challenge-Data/talent_feature_engineer.pkl")
+parser = joblib.load("Challenge-Data/model_response_parser.pkl")
 
-# --- Scoring helper function ---
+# Scoring helper function
 def score_pair(resume_idx: int, jd_idx: int) -> float:
     # Build features for this pair
     features = feature_engineer.create_comprehensive_features(
@@ -52,7 +50,7 @@ def score_pair(resume_idx: int, jd_idx: int) -> float:
     # Clip to [0, 100]
     return float(max(0, min(100, raw)))
 
-# --- FastAPI app and endpoints ---
+# FastAPI app and endpoints
 app = FastAPI()
 
 @app.get("/")
