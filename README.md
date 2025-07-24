@@ -1,94 +1,232 @@
-# AI Challenge: CV2JD Smart Match
-Qëllimi i kësaj sfide është të zhvilloni një prototip të një sistemi të bazuar në AI që analizon CV-të dhe i përputh ato me përshkrimet e punës (JDs) në bazë të përmbajtjes, kontekstit dhe përputhjes së aftësive.
+# Talent Scoring & Matching API
 
-## Të dhënat që do përdoren:
-### Dataseti i CV-ve (2400+ CV):
+A Python‑based project for computing compatibility scores between candidate resumes and job descriptions, training a regression model to predict those scores, and exposing the functionality via a RESTful FastAPI service.
 
- - ID – ID e dokumentit fizik të CV-së
- - Resume_str – Teksti i përpunuar nga formati PDF
- - Resume_html – Përmbajtja në HTML e shkëputur nga PDF
- - Category – Kategoria e punës për të cilën ka aplikuar kandidati (p.sh., Teknologji Informacioni, Shëndetësi, Bankë, Ndërtim, etj.)
- 
- ### Dataseti i Përshkrimeve të Punës (850+ JD):
+---
 
- - company_name – Emri i kompanisë që ka postuar JD-në
- - job_description – Përmbajtja e përshkrimit të punës
- - position_title – Titulli i pozicionit të shpallur
- - description_length – Gjatësia në karaktere e përshkrimit
- - model_response – Përmbledhje nga model AI në format JSON
+## Table of Contents
 
-## Struktura e Sfidës
-Gjithsejt janë 3 detyra me vështirësi të ndryshme:
+1. [Project Overview](#project-overview)
+2. [Jupyter Notebook Workflow](#jupyter-notebook-workflow)
+   - [Step 1: Data Preprocessing](#step-1-data-preprocessing)
+   - [Step 2: Feature Engineering & Model Training](#step-2-feature-engineering--model-training)
+   - [Step 3: Scoring & Evaluation](#step-3-scoring--evaluation)
+3. [API Service](#api-service)
+   - [Architecture](#architecture)
+   - [Endpoints](#endpoints)
+   - [Usage Examples](#usage-examples)
+4. [Technologies & Dependencies](#technologies--dependencies)
+5. [File Structure](#file-structure)
+6. [Installation & Setup](#installation--setup)
+7. [Contributing](#contributing)
 
- - Eksplorimi dhe përpunimi i të dhënave (EDA)
- - Modelimi i një përputhje mes CV/JD
- - Krijimi i një modeli për vlerësimin dhe rankimin e talenteve
+---
 
-Komplet sfida është planifikuar të marrë deri 10 orë dhe pritet të përfundohet në një periudhë prej 2 javësh (pas shpalljes).
+## Project Overview
 
-## Detyra 1: Eksplorimi dhe Përpunimi i të Dhënave (EDA)
-__Niveli:__ Fillestar
-__Objektiva:__
+This repository provides:
 
- - Analizoni dhe eksploroni të dhënat nga CV-të dhe JD-të.
- - Kryeni pastrimin dhe përgatitjen bazë të tekstit.
- - Nxirrni karakteristika bazë nga përmbajtja tekstuale.
+1. A **data science pipeline** (Jupyter notebook) to:
 
-### Çfarë pritet të dorëzoni:
+   - Load and preprocess resumes and job descriptions.
+   - Engineer features combining skills, experience, and semantic similarities (TF‑IDF, Word2Vec, transformer embeddings).
+   - Train and evaluate a regression model (Linear Regression) to predict a compatibility score (0–100).
 
- - Analizë statistikore e kategorive të CV-ve dhe përshkrimeve të punës.
- - Pastrim i tekstit (heqja e shenjave të pikësimit, stopwords, karaktere jo-ASCII).
- - Tokenizim, lematizim.
- - Vizualizime të fjalëve më të shpeshta për çdo kategori pune.
+2. A **FastAPI service** that:
 
-### Teknologjitë e rekomanduara:
-Python/Jupyter Notebooks (Pandas, NLTK/SpaCy), Matplotlib/Seaborn/Plotly
+   - Loads the trained model, scaler, feature engineer, and similarity matrices at startup.
+   - Exposes two endpoints:
+     - `GET /jobs/{job_id}/candidates?top_k=N`: top N resumes for a given job.
+     - `GET /resumes/{resume_id}/jobs?top_k=N`: top N jobs for a given resume.
 
-## Detyra 2: Model për Përputhje CV ⇄ JD
-__Niveli:__ Mesatar
-__Objektiva:__
+3. All artifacts (processed data, pickled objects, similarity matrices) in `Challenge-Data/`.
 
- - Përdorni teknikë të ngjashmërisë (TF-IDF, Sentence Embeddings) për të krahasuar përmbajtjen.
- - Ndërtoni një sistem që përputh çdo CV me JD-të më të përshtatshme.
+---
 
-### Çfarë pritet të dorëzoni:
+## Jupyter Notebook Workflow
 
- - Implementim i TF-IDF ose embeddings për të konvertuar tekstin.
- - Llogaritje e ngjashmërisë (p.sh., cosine similarity).
- - Kthim i Top 5 JD-ve më të përshtatshme për çdo CV ose për një CV të dhënë.
- - Vizualizim i rezultateve të ngjashmërisë (matricë ose heatmap).
- - Analizë krahasuese mbi cilësinë e përputhjes.
+The notebook (`talent_scoring_pipeline.ipynb`) is organized into three main steps:
 
-### Teknologjitë e rekomanduara:
-Scikit-learn, sentence-transformers, NumPy, Matplotlib
+### Step 1: Data Preprocessing
 
-## Detyra 3: Model për Vlerësimin dhe Rankimin e Talenteve
-__Niveli:__ Avancuar
-__Objektiva:__
+- **Load Raw Data**
 
- - Zhvilloni një model që vlerëson përputhjen e një CV-je me një JD të caktuar në bazë të kërkesave të nxjerra nga model_response.
+  - Read raw resume files (e.g., PDFs or text dumps) into a DataFrame.
+  - Read raw job descriptions into a second DataFrame.
 
-### Çfarë pritet të dorëzoni:
+- **Cleaning & Normalization**
 
- - Nxjerrje e fushave si “Required Skills”, “Educational Requirements”, etj., nga JD JSON.
- - Ndërtim i karakteristikave për krahasim (strukturor dhe tekstual).
- - Zhvillim i një modeli për vlerësim (p.sh., klasifikues ose sistem rankimi).
- - Output: një pikë përputhjeje 0–100 për secilën CV ndaj një JD.
- - Vlerësim i performancës me metrika si Precision@K, nDCG ose ROC-AUC.
+  - Strip HTML tags, lowercase text, remove punctuation.
+  - Fill missing values and filter out unusable records.
+  - Compute basic statistics: `text_length`, `word_count`.
 
-### Teknologjitë e rekomanduara:
-Hugging Face Transformers, Scikit-learn, XGBoost, NLP embeddings, LLM-ve
+- **Persist Processed CSVs**
 
-# Kriteret e Vlerësimit
+  - Save cleaned DataFrames as `processed_resumes.csv` and `processed_jds.csv` for reproducibility.
 
- - Prezentimi i të Dhënave -20%
- - Cilësia e Kodit - 10%
- - Performanca e Modelit - 45%
- - Krijimtaria/Inovacioni - 15%
- - Prezantimi i Punës - 10%
+### Step 2: Feature Engineering & Model Training
 
-## Këshilla
+- **Feature Engineering** (in `talent_feature_engineer.py`)
 
- - Përdorni një qasje eksperimentale me prova dhe gabime.
- - Pjesa e avancuar është fleksibile – mund të përdorni modele klasifikimi, rankimi ose rregulla të personalizuara.
- - Nxitni kreativitetin dhe analizën përtej zgjidhjeve standarde.
+  - **Skill Match Features**: Count and ratio of overlapping skills between resume and job (based on parsed skill lists).
+  - **Experience Match Features**: Extract years of experience from text and compare to job requirements.
+  - **Semantic Similarity Features**:
+    - **TF‑IDF Cosine Similarity** between cleaned resume & job-description vectors.
+    - **Word2Vec Similarity**: average of token‑vector similarities.
+    - **Transformer Embeddings** (`all‑MiniLM‑L6‑v2`) cosine similarity.
+
+- **Assemble Feature Matrix**
+
+  - Combine engineered features into a single DataFrame.
+  - Scale features with a `StandardScaler` (persisted as `talent_scaler.pkl`).
+
+- **Model Training**
+
+  - Split into train/test sets.
+  - Train a `LinearRegression` model to predict a 0–100 compatibility score (persisted as `talent_model_linear_regression.pkl`).
+  - Evaluate using R² score, error metrics, and manual inspection of top matches.
+
+### Step 3: Scoring & Evaluation
+
+- **Generate Compatibility Scores**
+
+  - For each (resume, job) pair, compute feature vector and run through scaler + model.
+  - Clip predictions to `[0, 100]`.
+
+- **Manual Validation**
+
+  - Inspect top‑5 matches for sample jobs and resumes.
+  - Confirm that high scores align with expected skill and experience overlaps.
+
+- **Persist Similarity Matrices**
+
+  - Save `similarity_matrix_tfidf.npy`, `similarity_matrix_word2vec.npy`, `similarity_matrix_transformer.npy` for fast lookup in the API.
+
+---
+
+## API
+
+The FastAPI application lives in `main.py`. On startup, it loads:
+
+- **DataFrames**: `processed_resumes.csv`, `processed_jds.csv` via pandas.
+- **Similarity matrices**: `.npy` files via NumPy.
+- **Model artifacts**: `talent_model_linear_regression.pkl`, `talent_scaler.pkl`, `talent_feature_engineer.pkl`, and (optionally) `model_response_parser.pkl` via joblib.
+
+### Architecture
+
+1. **Feature Engineering**: `TalentScoringFeatureEngineer.create_comprehensive_features(...)` builds the per-pair feature dict.
+2. **Prediction**: features → `StandardScaler.transform` → `LinearRegression.predict` → clipped score.
+3. **Endpoints**:
+   - ``
+     - Validates `job_id` range.
+     - Scores all resumes → sorts → returns top‑K JSON list of `[{resume_id, score}]`.
+   - ``
+     - Validates `resume_id` range.
+     - Scores all jobs → sorts → returns top‑K JSON list of `[{job_id, score}]`.
+
+### Usage Examples
+
+```bash
+# Startup (in project root)
+uvicorn main:app --reload
+
+# Swagger UI
+ohttp://127.0.0.1:8000/docs
+
+# Fetch top 5 resumes for job #0
+ohttp GET "http://127.0.0.1:8000/jobs/0/candidates?top_k=5"
+
+# Fetch top 3 jobs for resume #10
+ohttp GET "http://127.0.0.1:8000/resumes/10/jobs?top_k=3"
+```
+
+---
+
+## Technologies & Dependencies
+
+- **Language**: Python 3.10+
+- **Data Analysis**: pandas, NumPy
+- **NLP / Similarity**: scikit‑learn (TF‑IDF), gensim (Word2Vec), sentence-transformers
+- **Modeling**: scikit‑learn (LinearRegression, StandardScaler)
+- **Serialization**: joblib, pickle
+- **Web Framework**: FastAPI, Uvicorn
+- **Utilities**: pathlib, logging, re
+- **Development**: Jupyter Notebook
+
+Dependencies are pinned in `requirements.txt`.
+
+---
+
+## File Structure
+
+```
+├── Challenge-Data/                      # Persisted artifacts
+│   ├── processed_resumes.csv
+│   ├── processed_jds.csv
+│   ├── similarity_matrix_tfidf.npy
+│   ├── similarity_matrix_word2vec.npy
+│   ├── similarity_matrix_transformer.npy
+│   ├── talent_model_linear_regression.pkl
+│   ├── talent_scaler.pkl
+│   ├── talent_feature_engineer.pkl
+│   └── model_response_parser.pkl
+│
+├── resume_api/                          # API application
+│   ├── main.py                          # FastAPI app
+│   ├── talent_feature_engineer.py       # Feature engineering class
+│   ├── model_response_parser.py         # (Optional) parser utility
+│   └── __init__.py                      # Python package
+│
+├── notebooks/                           # Data science pipeline
+│   └── talent_scoring_pipeline.ipynb    # Step-by-step notebook
+│
+├── requirements.txt
+├── README.md                            # ← you are here
+└── .gitignore
+```
+
+---
+
+## Installation & Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/your-org/your-repo.git
+   cd your-repo
+   ```
+
+2. **Create a virtual environment**
+
+   ```bash
+   python -m venv venv        # or python3
+   source venv/Scripts/activate   # Windows
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. **Verify Data Artifacts** Ensure `Challenge-Data/` contains:
+
+   - `processed_resumes.csv`, `processed_jds.csv`
+   - `.npy` similarity matrices
+   - `.pkl` model & utilities
+
+5. **Run the API**
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   - Browse the interactive docs at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+6. **Test Endpoints**
+
+   ```bash
+   curl "http://127.0.0.1:8000/jobs/0/candidates?top_k=5"
+   curl "http://127.0.0.1:8000/resumes/10/jobs?top_k=3"
+   ```
