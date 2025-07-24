@@ -18,7 +18,6 @@ A Python‑based project for computing compatibility scores between candidate re
 4. [Technologies & Dependencies](#technologies--dependencies)
 5. [File Structure](#file-structure)
 6. [Installation & Setup](#installation--setup)
-7. [Contributing](#contributing)
 
 ---
 
