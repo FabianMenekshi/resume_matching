@@ -12,13 +12,13 @@
   },
   "Word2Vec": {
     "method": "Word2Vec",
-    "mean_similarity": 0.8589147861728887,
-    "median_similarity": 0.8697291442173414,
-    "std_similarity": 0.06510536350066365,
-    "max_similarity": 0.9847162555062712,
+    "mean_similarity": 0.8587902821813366,
+    "median_similarity": 0.869591209015054,
+    "std_similarity": 0.0650855294416881,
+    "max_similarity": 0.9844151756969385,
     "min_similarity": 0.0,
-    "high_similarity_pairs": "2117731",
-    "very_high_similarity_pairs": "2110583",
+    "high_similarity_pairs": "2117785",
+    "very_high_similarity_pairs": "2110554",
     "total_comparisons": 2118852
   },
   "all-MiniLM-L6-v2": {
