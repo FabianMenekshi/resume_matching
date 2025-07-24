@@ -45,7 +45,7 @@ This repository provides:
 
 ## Jupyter Notebook Workflow
 
-The notebook is organized into three main steps:
+The notebook (`talent_scoring_pipeline.ipynb`) is organized into three main steps:
 
 ### Step 1: Data Preprocessing
 
