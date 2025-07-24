@@ -12,8 +12,12 @@ __main__.ModelResponseParser = ModelResponseParser
 
 # --- Load persisted artifacts at startup ---
 # 1. Dataframes
+
 resume_df = pd.read_csv("Challenge-Data/processed_resumes.csv")
-jd_df     = pd.read_csv("Challenge-Data/processed_jds.csv")
+resume_df["cleaned_resume"] = resume_df["cleaned_resume"].fillna("").astype(str)
+
+jd_df = pd.read_csv("Challenge-Data/processed_jds.csv")
+jd_df["cleaned_job_description"] = jd_df["cleaned_job_description"].fillna("").astype(str)
 
 # 2. Similarity matrices
 sim_tfidf       = np.load("Challenge-Data/similarity_matrix_tfidf.npy")
