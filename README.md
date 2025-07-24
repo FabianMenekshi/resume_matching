@@ -45,7 +45,7 @@ This repository provides:
 
 ## Jupyter Notebook Workflow
 
-The notebook (`talent_scoring_pipeline.ipynb`) is organized into three main steps:
+The notebook is organized into three main steps:
 
 ### Step 1: Data Preprocessing
 
@@ -104,7 +104,7 @@ The notebook (`talent_scoring_pipeline.ipynb`) is organized into three main step
 
 ---
 
-## API Service
+## API
 
 The FastAPI application lives in `main.py`. On startup, it loads:
 
@@ -153,7 +153,7 @@ ohttp GET "http://127.0.0.1:8000/resumes/10/jobs?top_k=3"
 - **Utilities**: pathlib, logging, re
 - **Development**: Jupyter Notebook
 
-Dependencies are pinned in `requirements.txt` (see [Installation](#installation--setup)).
+Dependencies are pinned in `requirements.txt`.
 
 ---
 
