@@ -159,29 +159,45 @@ Dependencies are pinned in `requirements.txt`.
 ## File Structure
 
 ```
-├── Challenge-Data/                      # Persisted artifacts
-│   ├── processed_resumes.csv
-│   ├── processed_jds.csv
-│   ├── similarity_matrix_tfidf.npy
-│   ├── similarity_matrix_word2vec.npy
-│   ├── similarity_matrix_transformer.npy
-│   ├── talent_model_linear_regression.pkl
-│   ├── talent_scaler.pkl
-│   ├── talent_feature_engineer.pkl
-│   └── model_response_parser.pkl
-│
-├── resume_api/                          # API application
-│   ├── main.py                          # FastAPI app
-│   ├── talent_feature_engineer.py       # Feature engineering class
-│   ├── model_response_parser.py         # (Optional) parser utility
-│   └── __init__.py                      # Python package
-│
-├── notebooks/                           # Data science pipeline
-│   └── talent_scoring_pipeline.ipynb    # Step-by-step notebook
-│
-├── requirements.txt
-├── README.md                            # ← you are here
-└── .gitignore
+.
+├── gensim-env/  
+├── Challenge-Data/  
+│   ├── JDs.csv  
+│   └── Resume.csv  
+├── Models/  
+│   ├── best_talent_model.pkl  
+│   ├── jd_embeddings_transformer.npy  
+│   ├── jd_vectors_word2vec.npy  
+│   ├── model_response_parser.pkl  
+│   ├── performance_metrics.json  
+│   ├── resume_embeddings_transformer.npy  
+│   ├── resume_vectors_word2vec.npy  
+│   ├── similarity_matrix_tfidf.npy  
+│   ├── similarity_matrix_transformer.npy  
+│   ├── similarity_matrix_word2vec.npy  
+│   ├── talent_evaluation_results.json  
+│   ├── talent_feature_engineer.pkl  
+│   ├── talent_model_gradient_boosting.pkl  
+│   ├── talent_model_linear_regression.pkl  
+│   ├── talent_model_random_forest.pkl  
+│   ├── talent_model_xgboost.pkl  
+│   ├── talent_scaler.pkl  
+│   ├── tfidf_vectorizer.pkl  
+│   └── word2vec_model.bin  
+└── resume_api/  
+│   ├── __pycache__/  
+│   ├── Challenge-Data/  
+│   │   ├── processed_jds.csv  
+│   │   └── processed_resumes.csv  
+│   ├── main.py  
+│   ├── model_response_parser.py  
+│   ├── talent_feature_engineer.py  
+├── .gitattributes  
+├── README.md  
+├── requirements.txt  
+├── talent_feature_dataset.csv  
+└── talent_scoring_pipeline.ipynb  
+
 ```
 
 ---
